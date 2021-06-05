@@ -10,6 +10,8 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addPlugin(eleventyNavigationPlugin);
 
     // Setup files
+    eleventyConfig.addWatchTarget('./_tmp/style.css');
+    eleventyConfig.addPassthroughCopy({ './_tmp/style.css': './style.css' });
     eleventyConfig.addPassthroughCopy("src/**/*.js");
     eleventyConfig.addPassthroughCopy("assets/*.png", "assets");
     eleventyConfig.addPassthroughCopy("assets/*.jpg", "assets");

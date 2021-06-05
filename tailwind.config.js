@@ -8,10 +8,9 @@ module.exports = {
     theme: {
       extend: {
         colors: {
-          change: 'black',
-          myPurple: '#7C3AED',
-          myBlue: '#1E40AF',
-          myDarkBlue: '#1E3A8A'
+          myBrown: '#5f2321',
+          myBlue: '#284B63',
+          myGreen: '#3C6E71'
         },
         fontFamily: {
           'handwritten': ['Zeyada', 'cursive'],

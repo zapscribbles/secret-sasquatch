@@ -4,8 +4,8 @@
   "description": "Shhhh",
   "main": "index.js",
   "scripts": {
-    "start-dev": "rimraf ./_site && ELEVENTY_PRODUCTION=false eleventy --serve",
-    "build-prod": "rimraf ./_site && ELEVENTY_PRODUCTION=true eleventy"
+    "start-dev": "rimraf ./_site && ELEVENTY_PRODUCTION=false eleventy --serve & postcss src/styles/tailwind.css --o _tmp/style.css --watch",
+    "build-prod": "rimraf ./_site && ELEVENTY_PRODUCTION=true eleventy postcss src/styles/tailwind.css --o _site/style.css"
   },
   "repository": {
     "type": "git",
@@ -23,7 +23,11 @@
     "@tailwindcss/forms": "^0.3.3",
     "alpinejs": "^2.8.2",
     "html-minifier": "^4.0.0",
-    "rimraf": "^3.0.2",
-    "tailwindcss": "^2.1.1"
+    "rimraf": "^3.0.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.2.6",
+    "postcss-cli": "^8.3.0",
+    "tailwindcss": "^2.1.4"
   }
 }

@@ -1,0 +1,12 @@
+---
+layout: body
+js: local_storage_example.js
+needsMap: true
+eleventyNavigation:
+  key: LocalStorage Example
+---
+<div x-data="componentData()">
+  <div class="btn cursor-pointer" @click="updateStorage()">Update Storage</div>
+  <div class="btn cursor-pointer" @click="retrieveStorage()">Retrieve Storage</div>
+  <div>Stored time is:<span x-text="storageContents"></span></div>
+</div>

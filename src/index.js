@@ -1,6 +1,6 @@
-function componentData() {
+function gameData() {
     return {
-        message: '🤖 Hello World 🤓'
+
     }
 }
 
