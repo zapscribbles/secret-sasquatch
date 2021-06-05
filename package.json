@@ -1,0 +1,29 @@
+{
+  "name": "secret-sasquatch",
+  "version": "0.0.1",
+  "description": "Shhhh",
+  "main": "index.js",
+  "scripts": {
+    "start-dev": "rimraf ./_site && ELEVENTY_PRODUCTION=false eleventy --serve",
+    "build-prod": "rimraf ./_site && ELEVENTY_PRODUCTION=true eleventy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scribblerp9/secret-sasquatch.git"
+  },
+  "author": "Stephen Zappia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/scribblerp9/secret-sasquatch/issues"
+  },
+  "homepage": "https://github.com/scribblerp9/secret-sasquatch#readme",
+  "dependencies": {
+    "@11ty/eleventy": "^0.12.1",
+    "@11ty/eleventy-navigation": "^0.1.6",
+    "@tailwindcss/forms": "^0.3.3",
+    "alpinejs": "^2.8.2",
+    "html-minifier": "^4.0.0",
+    "rimraf": "^3.0.2",
+    "tailwindcss": "^2.1.1"
+  }
+}

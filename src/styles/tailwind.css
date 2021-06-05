@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .change {
+    color: black;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+ a {
+   @apply text-blue-700;
+ }
+.bg-mint {
+  background-color: #D1E3DD;
+}
+
+:focus {
+  outline: none !important;
+}
+
+.slideDownWrapper {
+  transition:height 0.3s ease-out;
+  height:0;
+  overflow:hidden;
+}
+
+nav.btn {
+  @apply px-3 py-2 rounded-md text-sm font-medium text-blue-800 hover:bg-blue-200;
+}
+
+nav.btn.active {
+ @apply bg-blue-800 text-white;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-md text-sm font-medium bg-blue-800 text-white hover:bg-blue-900 inline-flex;
+}
+
+#warrandyte-map .jvm-zoom-btn {
+  width: 30px;
+  height: 30px;
+  padding: 9px;
+  font-size: 20px;
+}
+
+#warrandyte-map .jvm-zoom-btn.jvm-zoomout {
+  top: 50px;
+}
+
+#warrandyte-map text.jvm-marker {
+  transform: translateY(20px) translateX(-20px);
+}
+
+#warrandyte-map text.jvm-marker[data-index='0'] {
+  transform: translateX(8px) translateY(-5px);
+  font-weight: bold;
+}
+
+#warrandyte-map text.jvm-marker[data-index='1'] {
+  transform: translateX(-60px) translateY(-20px);
+}
+
+.lds-ripple {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  left: calc(50vw - 40px);
+}
+.lds-ripple div {
+  position: absolute;
+  border: 4px solid #fff;
+  opacity: 1;
+  border-radius: 50%;
+  animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+.lds-ripple-purple div {
+  @apply border-purple-700;
+}
+.lds-ripple div:nth-child(2) {
+  animation-delay: -0.5s;
+}
+@keyframes lds-ripple {
+  0% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 0px;
+    left: 0px;
+    width: 72px;
+    height: 72px;
+    opacity: 0;
+  }
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  @apply w-32 bg-purple-200 text-center rounded-md py-1 text-xs absolute z-10 opacity-0 transition-opacity duration-300 transform translate-y-5;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  @apply opacity-100;
+}
+
+.bg-paper {
+  background-image: url('/assets/paper.jpg');
+  @apply bg-cover bg-no-repeat;
+}
+.selected {
+  @apply opacity-100;
+}
+.selected img {
+  @apply shadow-lg;
+}
