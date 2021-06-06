@@ -11,7 +11,11 @@ module.exports = function (eleventyConfig) {
 
     // Setup files
     eleventyConfig.addWatchTarget('./_tmp/style.css');
-    eleventyConfig.addPassthroughCopy({ './_tmp/style.css': './style.css' });
+    eleventyConfig.addPassthroughCopy({ 
+        './_tmp/style.css': './css/style.css',
+        'src/styles/loading-bar.css': './css/loading-bar.css' 
+    });
+    eleventyConfig.addPassthroughCopy("src/common-js/*.js", "common-js");
     eleventyConfig.addPassthroughCopy("src/**/*.js");
     eleventyConfig.addPassthroughCopy("assets/*.png", "assets");
     eleventyConfig.addPassthroughCopy("assets/*.jpg", "assets");

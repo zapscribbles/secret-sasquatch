@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start-dev": "rimraf ./_site && ELEVENTY_PRODUCTION=false eleventy --serve & postcss src/styles/tailwind.css --o _tmp/style.css --watch",
-    "build-prod": "rimraf ./_site && ELEVENTY_PRODUCTION=true eleventy postcss src/styles/tailwind.css --o _site/style.css"
+    "build-prod": "rimraf ./_site && ELEVENTY_PRODUCTION=true eleventy postcss src/styles/tailwind.css --o _site/css/style.css"
   },
   "repository": {
     "type": "git",

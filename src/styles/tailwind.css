@@ -3,95 +3,121 @@
 @tailwind utilities;
 
 @layer utilities {
-  .change {
-    color: black;
-  }
+	.change {
+		color: black;
+	}
 }
 
 html {
-  scroll-behavior: smooth;
+	scroll-behavior: smooth;
 }
 
 a {
-  @apply text-blue-700;
+	@apply text-blue-700;
 }
 
 .section-heading {
-  @apply text-2xl text-center my-4;
+	@apply text-2xl text-center my-4;
+}
+
+.section-subheading {
+	@apply text-lg text-center my-2 font-bold;
+}
+
+.helper-subheading {
+	@apply text-sm text-gray-400;
+}
+
+.change-button {
+	@apply relative inline-flex items-center border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500;
+}
+
+.change-button.disabled {
+  @apply text-gray-400 cursor-not-allowed bg-gray-300;
+}
+
+.change-button.increment-button {
+	@apply px-2 py-2 rounded-r-md -ml-px;
+}
+
+.change-button.decrement-button {
+	@apply px-2 py-2 rounded-l-md;
+}
+
+.ldBar-label {
+	@apply hidden;
 }
 
 :focus {
-  outline: none !important;
+	outline: none !important;
 }
 
 .slideDownWrapper {
-  transition: height 0.3s ease-out;
-  height: 0;
-  overflow: hidden;
+	transition: height 0.3s ease-out;
+	height: 0;
+	overflow: hidden;
 }
 
 nav.btn {
-  @apply px-3 py-2 rounded-md text-sm font-medium text-blue-800 hover:bg-blue-200;
+	@apply px-3 py-2 rounded-md text-sm font-medium text-blue-800 hover:bg-blue-200;
 }
 
 nav.btn.active {
-  @apply bg-blue-800 text-white;
+	@apply bg-blue-800 text-white;
 }
 
 .btn {
-  @apply px-4 py-2 rounded-md text-sm font-medium bg-blue-800 text-white hover:bg-blue-900 inline-flex;
+	@apply px-4 py-2 rounded-md text-sm font-medium bg-myBlue text-white hover:bg-blue-900 inline-flex;
 }
 
-
-
 .lds-ripple {
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  left: calc(50vw - 40px);
+	position: absolute;
+	width: 80px;
+	height: 80px;
+	left: calc(50vw - 40px);
 }
 
 .lds-ripple div {
-  position: absolute;
-  border: 4px solid #fff;
-  opacity: 1;
-  border-radius: 50%;
-  animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+	position: absolute;
+	border: 4px solid #fff;
+	opacity: 1;
+	border-radius: 50%;
+	animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
 }
 
 .lds-ripple-purple div {
-  @apply border-purple-700;
+	@apply border-purple-700;
 }
 
 .lds-ripple div:nth-child(2) {
-  animation-delay: -0.5s;
+	animation-delay: -0.5s;
 }
 
 @keyframes lds-ripple {
-  0% {
-    top: 36px;
-    left: 36px;
-    width: 0;
-    height: 0;
-    opacity: 1;
-  }
-  100% {
-    top: 0px;
-    left: 0px;
-    width: 72px;
-    height: 72px;
-    opacity: 0;
-  }
+	0% {
+		top: 36px;
+		left: 36px;
+		width: 0;
+		height: 0;
+		opacity: 1;
+	}
+	100% {
+		top: 0px;
+		left: 0px;
+		width: 72px;
+		height: 72px;
+		opacity: 0;
+	}
 }
 
 /* Tooltip text */
 
 .tooltip .tooltiptext {
-  @apply w-32 bg-purple-200 text-center rounded-md py-1 text-xs absolute z-10 opacity-0 transition-opacity duration-300 transform translate-y-5;
+	@apply w-32 bg-purple-200 text-center rounded-md py-1 text-xs absolute z-10 opacity-0 transition-opacity duration-300 transform translate-y-5;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
 
 .tooltip:hover .tooltiptext {
-  @apply opacity-100;
+	@apply opacity-100;
 }

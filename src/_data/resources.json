@@ -1,0 +1,22 @@
+{
+  "materials": [
+    {
+      "id": "wood",
+      "name": "Wood"
+    },
+    {
+      "id": "metal",
+      "name": "Metal"
+    }
+  ],
+  "food": [
+    {
+      "id": "critters",
+      "name": "Critters"
+    },
+    {
+      "id": "snacks",
+      "name": "Snacks"
+    }
+  ]
+}
