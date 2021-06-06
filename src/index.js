@@ -47,17 +47,16 @@ function gameData() {
 		resources: {
 			wood: 0,
 			metal: 0,
-			critters: 0,
-			snacks: 0,
+			critters: 80,
+			snacks: 40,
 		},
 		delta(type, component) {
 			if (this.defs.resources != undefined) {
 				var resourceJob =
 					this.defs.resources[type].components[component].job;
-				return (
-					this.jobs[resourceJob] *
-					this.defs.jobs[resourceJob].amountGathered
-				);
+				var amountGained = this.jobs[resourceJob] * this.defs.jobs[resourceJob].amountGathered;
+				var amountConsumed = this.population.total * this.defs.resources[type].components[component].consumption;
+				return amountGained - amountConsumed;
 			} else {
 				return 0;
 			}
@@ -94,7 +93,7 @@ function gameData() {
 			}
 		},
 		population: {
-			total: 10,
+			total: 2,
 			max: 15,
 			daysNeededToSpawn: 5,
 			remainingDaysUntilSpawn: 5,

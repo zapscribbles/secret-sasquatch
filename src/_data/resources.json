@@ -5,11 +5,13 @@
 		"components": {
 			"wood": {
 				"name": "Wood",
-				"job": "chopper"
+				"job": "chopper",
+        "consumption": 0
 			},
 			"metal": {
 				"name": "Metal",
-				"job": "shinebandit"
+				"job": "shinebandit",
+        "consumption": 0
 			}
 		}
 	},
@@ -19,11 +21,13 @@
 		"components": {
 			"critters": {
 				"name": "Critters",
-				"job": "catcher"
+				"job": "catcher",
+        "consumption": 2
 			},
 			"snacks": {
 				"name": "Snacks",
-				"job": "snacker"
+				"job": "snacker",
+        "consumption": 1
 			}
 		}
 	}
