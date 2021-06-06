@@ -19,6 +19,6 @@
 .ldBar path.mainline {
   stroke-linecap: round;
 }
-#day-progress .ldBar-label {
+.hide-label .ldBar-label {
 	display: none;
 }

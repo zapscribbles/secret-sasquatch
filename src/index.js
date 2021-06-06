@@ -17,6 +17,12 @@ function gameData() {
 				stroke: "data:ldbar/res,stripe(red,orange,1)",
 				"stroke-width": 2,
 			});
+			this.spawnProgressElement = new ldBar("#spawn-progress", {
+				preset: "line",
+				duration: 0.5,
+				stroke: "green",
+				"stroke-width": 2,
+			});
 
 			// Retrieve definitions from eleventy's global data directory
 			retrieveJSON("data/jobs.json").then((data) => {
@@ -46,21 +52,28 @@ function gameData() {
 		},
 		delta(type, component) {
 			if (this.defs.resources != undefined) {
-				var resourceJob = this.defs.resources[type].components[component].job;
+				var resourceJob =
+					this.defs.resources[type].components[component].job;
 				return (
 					this.jobs[resourceJob] *
 					this.defs.jobs[resourceJob].amountGathered
 				);
 			} else {
-				return 0
+				return 0;
 			}
 		},
 		totalDelta(type) {
 			if (this.defs.resources != undefined) {
 				var totalDelta = 0;
-				for (const componentID in this.defs.resources[type].components) {
-					if (Object.hasOwnProperty.call(this.defs.resources[type].components, componentID)) {
-						const resourceDelta = this.delta(type, componentID)
+				for (const componentID in this.defs.resources[type]
+					.components) {
+					if (
+						Object.hasOwnProperty.call(
+							this.defs.resources[type].components,
+							componentID
+						)
+					) {
+						const resourceDelta = this.delta(type, componentID);
 						totalDelta += resourceDelta;
 					}
 				}
@@ -80,12 +93,20 @@ function gameData() {
 					break;
 			}
 		},
-		numTotal: 10,
+		population: {
+			total: 10,
+			max: 15,
+			daysNeededToSpawn: 5,
+			remainingDaysUntilSpawn: 5,
+		},
+		spawnSasquatch() {
+			this.population.total++;
+		},
 		numAssigned() {
 			return getTotal(this.jobs);
 		},
 		numIdle() {
-			return this.numTotal - this.numAssigned();
+			return this.population.total - this.numAssigned();
 		},
 		changeJob(job, changeType, amount) {
 			// Adding to a job
@@ -134,10 +155,29 @@ function gameData() {
 			this.dayProgressElement.set(0);
 
 			// Add resources
-			this.resources.wood += this.delta('materials', 'wood');
-			this.resources.metal += this.delta('materials', 'metal');
-			this.resources.critters += this.delta('food', 'critters');
-			this.resources.snacks += this.delta('food', 'snacks');
+			this.resources.wood += this.delta("materials", "wood");
+			this.resources.metal += this.delta("materials", "metal");
+			this.resources.critters += this.delta("food", "critters");
+			this.resources.snacks += this.delta("food", "snacks");
+
+			// Handle spawning
+			if (this.population.total < this.population.max) {
+				if (this.population.remainingDaysUntilSpawn == 0) {
+					// Reset remainingDaysUntilSpawn counter
+					this.population.remainingDaysUntilSpawn =
+						this.population.daysNeededToSpawn;
+					// Attempt to spawn a new sasquatch
+					this.spawnSasquatch();
+				} else {
+					this.population.remainingDaysUntilSpawn--;
+				}
+				this.spawnProgressElement.set(
+					100 -
+						(this.population.remainingDaysUntilSpawn /
+							this.population.daysNeededToSpawn) *
+							100
+				);
+			}
 
 			// Update threat level
 			this.setThreatLevel();
@@ -158,6 +198,7 @@ function gameData() {
 		},
 		dayProgressElement: null,
 		threatProgressElement: null,
+		spawnProgressElement: null,
 	};
 }
 
