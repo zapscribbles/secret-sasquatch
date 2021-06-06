@@ -22,3 +22,11 @@
 .hide-label .ldBar-label {
 	display: none;
 }
+#day-progress i {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-18px);
+  font-size: 36px;
+  color: orange;
+  top: 50%;
+}

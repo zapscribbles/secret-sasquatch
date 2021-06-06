@@ -24,7 +24,7 @@
         "name": "Snacker",
         "description": "Find and take little snacks from the humans. They have so many you would think they wouldn't notice, but be careful - too much of this and they might",
         "resource": "snacks",
-        "amountGathered": 3,
+        "amountGathered": 7,
         "threatIncrease": 10
     },
     "watcher": {
