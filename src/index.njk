@@ -21,7 +21,7 @@ eleventyNavigation:
 		<div class="w-min m-auto">
 			<div class="helper-subheading mt-4 mb-2 text-center">Assign jobs:</div>
 			{% for id, def in jobs %}
-				<div class="flex my-4">
+				<div class="flex items-center my-4">
 					<div class="w-28 text-right pr-2">{{ def.name }}</div>
 					<div class="w-14 text-center" x-text="jobs['{{ id }}']"></div>
 					<div class="relative z-0 inline-flex shadow-sm rounded-md">
@@ -39,34 +39,37 @@ eleventyNavigation:
 	<div id="resources-container">
 		<div class="section-heading">Resources</div>
 		<div class="lg:w-2/3 lg:m-auto">
-			<div class="bg-blue-100 rounded-lg m-4 p-4">
-				<div class="section-subheading">Materials</div>
-				<div class="text-center">Total: <span x-text="totalResources('materials')"></span></div>
-				<div class="flex justify-center">
-					{% for resource in resources.materials %}
-						<div class="flex my-4">
-							<div class="w-28 text-right pr-2">{{ resource.name }}:</div>
-							<div class="w-14 text-center" x-text="resources['{{resource.id}}']"></div>
-						</div>
-					{% endfor %}
+
+			{% for resourceTypeId, resourceType in resources %}
+				<div class="bg-{{resourceType.colour}} rounded-lg m-4 p-4">
+					<div class="section-subheading">{{ resourceType.name }}</div>
+					<div class="text-center">
+						Total: 
+						<span x-text="totalResources('{{ resourceTypeId }}')"></span>
+						<span class="text-center mr-2" x-show="totalDelta('{{ resourceTypeId }}') != 0" :class="{'text-green-600': totalDelta('{{ resourceTypeId }}') > 0, 'text-red-600': totalDelta('{{ resourceTypeId }}') < 0}">
+							<i class="text-xs fas" :class="{'fa-arrow-up': totalDelta('{{ resourceTypeId }}') > 0, 'fa-arrow-down': totalDelta('{{ resourceTypeId }}') < 0}"></i>
+							<span x-text="totalDelta('{{ resourceTypeId }}')"></span>
+						</span>
+					</div>
+					<div class="flex justify-center">
+						{% for id, component in resourceType.components %}
+							<div class="flex my-4">
+								<div class="text-right mr-2">{{ component.name }}:</div>
+								<div class="text-center mr-2" x-text="resources['{{ id }}']"></div>
+								<div class="text-center mr-2" x-show="delta('{{resourceTypeId}}', '{{id}}') != 0" :class="{'text-green-600': delta('{{resourceTypeId}}', '{{id}}') > 0, 'text-red-600': delta('{{resourceTypeId}}', '{{id}}') < 0}">
+									<i class="text-xs fas" :class="{'fa-arrow-up': delta('{{resourceTypeId}}', '{{id}}') > 0, 'fa-arrow-down': delta('{{resourceTypeId}}', '{{id}}') < 0}"></i>
+									<span x-text="delta('{{resourceTypeId}}', '{{id}}')"></span>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
 				</div>
-			</div>
-			<div class="bg-green-100 rounded-lg m-4 p-4">
-				<div class="section-subheading">Food</div>
-				<div class="text-center">Total: <span x-text="totalResources('food')"></span></div>
-				<div class="flex justify-center">
-					{% for resource in resources.food %}
-						<div class="flex my-4">
-							<div class="w-28 text-right pr-2">{{ resource.name }}:</div>
-							<div class="w-14 text-center" x-text="resources['{{resource.id}}']"></div>
-						</div>
-					{% endfor %}
-				</div>
-			</div>
+			{% endfor %}
 		</div>
 	</div>
 	<div id="threat-container">
 		<div class="section-heading">Reveal Threat</div>
+		<div id="threat-progress" class="ldBar label-center" style="width: 100%; height: 100px"></div>
 	</div>
 	<div id="buildings-container">
 		<div class="section-heading">Buildings</div>

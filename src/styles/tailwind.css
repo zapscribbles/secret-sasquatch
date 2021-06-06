@@ -44,10 +44,6 @@ a {
 	@apply px-2 py-2 rounded-l-md;
 }
 
-.ldBar-label {
-	@apply hidden;
-}
-
 :focus {
 	outline: none !important;
 }

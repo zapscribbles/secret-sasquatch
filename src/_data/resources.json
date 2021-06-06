@@ -1,22 +1,30 @@
 {
-  "materials": [
-    {
-      "id": "wood",
-      "name": "Wood"
-    },
-    {
-      "id": "metal",
-      "name": "Metal"
-    }
-  ],
-  "food": [
-    {
-      "id": "critters",
-      "name": "Critters"
-    },
-    {
-      "id": "snacks",
-      "name": "Snacks"
-    }
-  ]
+	"materials": {
+		"name": "Materials",
+		"colour": "blue-100",
+		"components": {
+			"wood": {
+				"name": "Wood",
+				"job": "chopper"
+			},
+			"metal": {
+				"name": "Metal",
+				"job": "shinebandit"
+			}
+		}
+	},
+	"food": {
+		"name": "Food",
+		"colour": "green-100",
+		"components": {
+			"critters": {
+				"name": "Critters",
+				"job": "catcher"
+			},
+			"snacks": {
+				"name": "Snacks",
+				"job": "snacker"
+			}
+		}
+	}
 }

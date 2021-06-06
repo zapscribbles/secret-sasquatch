@@ -1,4 +1,4 @@
-var progressFactor = 30; // How many times a second we want the progress bar to be updated (and timer function to be run)
+var progressFactor = 60; // How many times a second we want the progress bar to be updated (and timer function to be run)
 
 function gameData() {
 	return {
@@ -9,6 +9,13 @@ function gameData() {
 				duration: 1 / progressFactor / 2,
 				stroke: `data:ldbar/res,gradient(0,${this.secondsInADay},orange,yellow)`,
 				"stroke-width": 10,
+				precision: "0.0000001",
+			});
+			this.threatProgressElement = new ldBar("#threat-progress", {
+				preset: "line",
+				duration: 1,
+				stroke: "data:ldbar/res,stripe(red,orange,1)",
+				"stroke-width": 2,
 			});
 
 			// Retrieve definitions from eleventy's global data directory
@@ -22,10 +29,8 @@ function gameData() {
 			// Start timer (do this last)
 			this.increaseTime();
 		},
-		defs: {
-			jobs: null,
-			resources: null,
-		},
+		secondsInADay: 2,
+		defs: {},
 		jobs: {
 			chopper: 0,
 			shinebandit: 0,
@@ -38,6 +43,29 @@ function gameData() {
 			metal: 0,
 			critters: 0,
 			snacks: 0,
+		},
+		delta(type, component) {
+			if (this.defs.resources != undefined) {
+				var resourceJob = this.defs.resources[type].components[component].job;
+				return (
+					this.jobs[resourceJob] *
+					this.defs.jobs[resourceJob].amountGathered
+				);
+			} else {
+				return 0
+			}
+		},
+		totalDelta(type) {
+			if (this.defs.resources != undefined) {
+				var totalDelta = 0;
+				for (const componentID in this.defs.resources[type].components) {
+					if (Object.hasOwnProperty.call(this.defs.resources[type].components, componentID)) {
+						const resourceDelta = this.delta(type, componentID)
+						totalDelta += resourceDelta;
+					}
+				}
+			}
+			return totalDelta;
 		},
 		totalResources(type) {
 			switch (type) {
@@ -86,7 +114,6 @@ function gameData() {
 			}
 		},
 		currentTime: 0,
-		secondsInADay: 2,
 		increaseTime() {
 			setTimeout(() => {
 				// console.log(humanReadableProxy(this.currentTime))
@@ -102,14 +129,35 @@ function gameData() {
 		},
 		endOfDay() {
 			// console.log('end of day reached');
+			// Reset day time
 			this.currentTime = 0;
 			this.dayProgressElement.set(0);
-			this.resources.wood += this.jobs.chopper * this.defs.jobs.chopper.amountGathered;
-			this.resources.metal += this.jobs.shinebandit * this.defs.jobs.shinebandit.amountGathered;
-			this.resources.critters += this.jobs.catcher * this.defs.jobs.catcher.amountGathered;
-			this.resources.snacks += this.jobs.snacker * this.defs.jobs.snacker.amountGathered;
+
+			// Add resources
+			this.resources.wood += this.delta('materials', 'wood');
+			this.resources.metal += this.delta('materials', 'metal');
+			this.resources.critters += this.delta('food', 'critters');
+			this.resources.snacks += this.delta('food', 'snacks');
+
+			// Update threat level
+			this.setThreatLevel();
+		},
+		threatLevel: 0,
+		setThreatLevel() {
+			// Calulcate the threat level
+			var newThreatLevel = 0;
+			for (const jobID in this.defs.jobs) {
+				if (Object.hasOwnProperty.call(this.defs.jobs, jobID)) {
+					const job = this.defs.jobs[jobID];
+					newThreatLevel += job.threatIncrease * this.jobs[jobID];
+				}
+			}
+			this.threatLevel = newThreatLevel;
+			// Update the progress bar
+			this.threatProgressElement.set(newThreatLevel);
 		},
 		dayProgressElement: null,
+		threatProgressElement: null,
 	};
 }
 

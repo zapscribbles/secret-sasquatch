@@ -10,28 +10,28 @@
         "name": "Shine Bandit",
         "description": "Sneak into the human village and steal shiny metals. Be careful - too many of these and humans may notice!",
         "resource": "metal",
-        "amountGathered": 1,
+        "amountGathered": 2,
         "threatIncrease": 5
     },
     "catcher": {
         "name": "Catcher",
         "description": "Catch critters scurrying around the forest. Humans don't notice.",
         "resource": "critters",
-        "amountGathered": 3,
+        "amountGathered": 4,
         "threatIncrease": 0
     },
     "snacker": {
         "name": "Snacker",
         "description": "Find and take little snacks from the humans. They have so many you would think they wouldn't notice, but be careful - too much of this and they might",
         "resource": "snacks",
-        "amountGathered": 2,
+        "amountGathered": 3,
         "threatIncrease": 10
     },
     "watcher": {
         "name": "Watcher",
         "description": "Observe the humans and take notes. We can learn things from their weird behaviours. Why does the toilet seat need to be down anyway?!",
         "resource": "observations",
-        "amountGathered": 1,
+        "amountGathered": 10,
         "threatIncrease": 20
     }
 }
