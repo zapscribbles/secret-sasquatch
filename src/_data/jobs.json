@@ -1,23 +1,37 @@
-[
-    {
-        "id": "chopper",
+{
+    "chopper": {
         "name": "Chopper",
-        "description": "Chop and gather wood from the forest. Humans don't notice."
-    },{
-        "id": "shinebandit",
+        "description": "Chop and gather wood from the forest. Humans don't notice.",
+        "resource": "wood",
+        "amountGathered": 5,
+        "threatIncrease": 0
+    },
+    "shinebandit": {
         "name": "Shine Bandit",
-        "description": "Sneak into the human village and steal shiny metals. Be careful - too many of these and humans may notice!"
-    },{
-        "id": "catcher",
+        "description": "Sneak into the human village and steal shiny metals. Be careful - too many of these and humans may notice!",
+        "resource": "metal",
+        "amountGathered": 1,
+        "threatIncrease": 5
+    },
+    "catcher": {
         "name": "Catcher",
-        "description": "Catch critters scurrying around the forest. Humans don't notice."
-    },{
-        "id": "snacker",
+        "description": "Catch critters scurrying around the forest. Humans don't notice.",
+        "resource": "critters",
+        "amountGathered": 3,
+        "threatIncrease": 0
+    },
+    "snacker": {
         "name": "Snacker",
-        "description": "Find and take little snacks from the humans. They have so many you would think they wouldn't notice, but be careful - too much of this and they might"
-    },{
-        "id": "watcher",
+        "description": "Find and take little snacks from the humans. They have so many you would think they wouldn't notice, but be careful - too much of this and they might",
+        "resource": "snacks",
+        "amountGathered": 2,
+        "threatIncrease": 10
+    },
+    "watcher": {
         "name": "Watcher",
-        "description": "Observe the humans and take notes. We can learn things from their weird behaviours. Why does the toilet seat need to be down anyway?!"
+        "description": "Observe the humans and take notes. We can learn things from their weird behaviours. Why does the toilet seat need to be down anyway?!",
+        "resource": "observations",
+        "amountGathered": 1,
+        "threatIncrease": 20
     }
-]
+}

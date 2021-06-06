@@ -11,15 +11,14 @@ module.exports = function (eleventyConfig) {
 
     // Setup files
     eleventyConfig.addWatchTarget('./_tmp/style.css');
-    eleventyConfig.addPassthroughCopy({ 
-        './_tmp/style.css': './css/style.css',
-        'src/styles/loading-bar.css': './css/loading-bar.css' 
-    });
-    eleventyConfig.addPassthroughCopy("src/common-js/*.js", "common-js");
+    eleventyConfig.addPassthroughCopy({'./_tmp/style.css': './css/style.css'});
+    eleventyConfig.addPassthroughCopy({'src/styles/loading-bar.css': './css/loading-bar.css'});
+    eleventyConfig.addPassthroughCopy("src/common-js/*.js");
     eleventyConfig.addPassthroughCopy("src/**/*.js");
-    eleventyConfig.addPassthroughCopy("assets/*.png", "assets");
-    eleventyConfig.addPassthroughCopy("assets/*.jpg", "assets");
-    eleventyConfig.addPassthroughCopy("assets/*.ico", "assets");
+    eleventyConfig.addPassthroughCopy("assets/*.png");
+    eleventyConfig.addPassthroughCopy("assets/*.jpg");
+    eleventyConfig.addPassthroughCopy("assets/*.ico");
+    eleventyConfig.addPassthroughCopy({"src/_data/*.json": "data"});
 
     // This adds a variable that can be used in the template. In this case, we use build time to identify the current version of the site
     eleventyConfig.addShortcode('version', function () {
