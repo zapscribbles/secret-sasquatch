@@ -1,12 +1,26 @@
-var progressFactor = 60; // How many times a second we want the progress bar to be updated (and timer function to be run)
-
 function gameData() {
 	return {
 		init() {
+
+			// Load previously saved game (if there is one)
+			if (loadGame() == null) {
+				// Start a new game
+				// Retrieve definitions from eleventy's global data directory
+				retrieveJSON("data/jobs.json").then((data) => {
+					this.defs.jobs = data;
+				});
+				retrieveJSON("data/resources.json").then((data) => {
+					this.defs.resources = data;
+				});
+			} else {
+				// Load the data
+				loadGameClicked();
+			}
+
 			// Setup the time of day progress bar
 			this.dayProgressElement = new ldBar("#day-progress", {
 				preset: "fan",
-				duration: 1 / progressFactor / 2,
+				duration: 1 / this.progressFactor / 2,
 				stroke: `data:ldbar/res,gradient(0,${this.secondsInADay},orange,yellow)`,
 				"stroke-width": 10,
 				precision: "0.0000001",
@@ -24,18 +38,11 @@ function gameData() {
 				"stroke-width": 2,
 			});
 
-			// Retrieve definitions from eleventy's global data directory
-			retrieveJSON("data/jobs.json").then((data) => {
-				this.defs.jobs = data;
-			});
-			retrieveJSON("data/resources.json").then((data) => {
-				this.defs.resources = data;
-			});
-
 			// Start timer (do this last)
 			this.increaseTime();
 		},
 		secondsInADay: 2,
+		progressFactor: 60, // How many times a second we want the progress bar to be updated (and timer function to be run)
 		defs: {},
 		jobs: {
 			chopper: 0,
@@ -54,8 +61,12 @@ function gameData() {
 			if (this.defs.resources != undefined) {
 				var resourceJob =
 					this.defs.resources[type].components[component].job;
-				var amountGained = this.jobs[resourceJob] * this.defs.jobs[resourceJob].amountGathered;
-				var amountConsumed = this.population.total * this.defs.resources[type].components[component].consumption;
+				var amountGained =
+					this.jobs[resourceJob] *
+					this.defs.jobs[resourceJob].amountGathered;
+				var amountConsumed =
+					this.population.total *
+					this.defs.resources[type].components[component].consumption;
 				return amountGained - amountConsumed;
 			} else {
 				return 0;
@@ -137,7 +148,7 @@ function gameData() {
 		increaseTime() {
 			setTimeout(() => {
 				// console.log(humanReadableProxy(this.currentTime))
-				this.currentTime += 1 / progressFactor;
+				this.currentTime += 1 / this.progressFactor;
 				this.dayProgressElement.set(
 					(this.currentTime / this.secondsInADay) * 100
 				);
@@ -145,7 +156,7 @@ function gameData() {
 					this.endOfDay();
 				}
 				this.increaseTime();
-			}, 1000 / progressFactor);
+			}, 1000 / this.progressFactor);
 		},
 		endOfDay() {
 			// console.log('end of day reached');
@@ -198,6 +209,24 @@ function gameData() {
 		dayProgressElement: null,
 		threatProgressElement: null,
 		spawnProgressElement: null,
+		saveGameClicked() {
+			console.log("Saving...");
+			saveGame();
+			console.log("Game saved.");
+		},
+		loadGameClicked() {
+			console.log("Loading...");
+			var loadedComponentData = loadGame();
+			// Work through each object in the loaded data and replace the current component data with the loaded data
+			// TODO: Take into account versions, user may have saved on an older version of the game
+			for (key in loadedComponentData) {
+				this[key] = loadedComponentData[key];
+			}
+			console.log("Game loaded.");
+		},
+		newGameClicked() {
+			wipeGame();
+		},
 	};
 }
 
@@ -209,4 +238,39 @@ async function retrieveJSON(fileDir) {
 	return await fetch(fileDir).then((response) => {
 		return response.json();
 	});
+}
+
+function saveGame() {
+	var componentData = document
+		.querySelector("#game-container")
+		.__x.getUnobservedData();
+	for (key in componentData) {
+		if (
+			typeof componentData[key] == "function" ||
+			componentData[key] instanceof ldBar ||
+			key === "currentTime"
+		) {
+			delete componentData[key];
+		}
+	}
+	var encryptedSave = window.simpleEncryptor.encrypt(componentData);
+	console.log(encryptedSave);
+	localStorage.setItem("save_string", encryptedSave);
+}
+
+function loadGame() {
+	// Load and decode the saved data
+	var saveString = localStorage.getItem("save_string");
+	if (saveString == null) {
+		return null;
+	} else {
+		// console.log(saveString)
+		var decryptedSave = window.simpleEncryptor.decrypt(saveString);
+		return decryptedSave;
+	}
+}
+
+function wipeGame() {
+	localStorage.setItem("save_string", null);
+	location.reload();
 }

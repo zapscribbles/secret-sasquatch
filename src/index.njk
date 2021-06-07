@@ -6,6 +6,11 @@ eleventyNavigation:
   key: Home
 ---
 <div id="game-container" class="w-full" x-data="gameData()" x-init="init()">
+	<div class="flex justify-center">
+		<a href="#" class='btn m-4' @click="newGameClicked()">Wipe Save & Start New Game</a>
+		<a href="#" class='btn m-4' @click="saveGameClicked()">Save Game</a>
+		<a href="#" class='btn m-4' @click="loadGameClicked()">Load Game</a>
+	</div>
 	<div id="time-container">
 		{# <div class="section-heading">Time</div> #}
 		<div id="day-progress" class="ldBar label-center hide-label" style="width: 100%; height: 100px">

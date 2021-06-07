@@ -4,8 +4,8 @@
   "description": "Shhhh",
   "main": "index.js",
   "scripts": {
-    "start-dev": "rimraf ./_site && ELEVENTY_PRODUCTION=false eleventy --serve & postcss src/styles/tailwind.css --o _tmp/style.css --watch",
-    "build-prod": "rimraf ./_site && ELEVENTY_PRODUCTION=true eleventy && postcss src/styles/tailwind.css --o _site/css/style.css"
+    "start-dev": "browserify entry.js -o src/common-js/bundle.js & rimraf ./_site && ELEVENTY_PRODUCTION=false eleventy --serve & postcss src/styles/tailwind.css --o _tmp/style.css --watch",
+    "build-prod": "browserify entry.js -o src/common-js/bundle.js & rimraf ./_site && ELEVENTY_PRODUCTION=true eleventy && postcss src/styles/tailwind.css --o _site/css/style.css"
   },
   "repository": {
     "type": "git",
@@ -22,8 +22,10 @@
     "@11ty/eleventy-navigation": "^0.1.6",
     "@tailwindcss/forms": "^0.3.3",
     "alpinejs": "^2.8.2",
+    "browserify": "^17.0.0",
     "html-minifier": "^4.0.0",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "simple-encryptor": "^4.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.2.6",
