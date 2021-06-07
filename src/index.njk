@@ -31,6 +31,10 @@ eleventyNavigation:
 				{% for id, def in jobs %}
 					<div class="flex items-center my-4">
 						<div class="w-28 text-right pr-2">{{ def.name }}</div>
+						<div class="flex justify-center items-center">
+							<i class="fas fa-question-circle text-myGreen tooltip">
+								<span class="tooltiptext">{{ def.description }}</span></i>
+						</div>
 						<div class="w-14 text-center" x-text="jobs['{{ id }}']"></div>
 						<div class="relative z-0 inline-flex shadow-sm rounded-md">
 							<button type="button" @click="changeJob('{{ id }}', 'subtract', 1)" :class="{'disabled': jobs['{{ id }}'] < 1}" x-bind:disabled="jobs['{{ id }}'] < 1" class="change-button decrement-button">
@@ -57,7 +61,7 @@ eleventyNavigation:
 			<div class="lg:w-2/3 lg:m-auto">
 
 				{% for resourceTypeId, resourceType in resources %}
-					<div class="bg-{{resourceType.colour}} rounded-lg m-4 p-4">
+					<div class="bg-{{resourceType.colour}} rounded-lg m-4 pb-8 p-4">
 						<div class="section-subheading">{{ resourceType.name }}</div>
 						<div class="grid grid-cols-3 gap-2 justify-center items-center">
 							<div class="text-right">Total:</div>

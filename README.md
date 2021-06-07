@@ -16,9 +16,10 @@ Tech stack:
 * [Tailwind CSS](https://tailwindcss.com/)
 * Deployed on [Netlify](https://www.netlify.com/)
 
-Modules used
+Also utilises:
 * [Browserify](https://browserify.org/) to load modules
 * [ldBar](https://loading.io/progress/) for various progress bar elements
 * [simple-encryptor](https://www.npmjs.com/package/simple-encryptor) for encrypting save data
 * Using [Nunjucks](https://mozilla.github.io/nunjucks) for templating
 * [PostCSS](https://github.com/postcss/postcss) to load Tailwind
+* [FontAwesome](https://fontawesome.com/)
