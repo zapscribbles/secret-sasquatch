@@ -18,13 +18,19 @@ eleventyNavigation:
 		</div>
 	</div>
 	<div class="flex flex-col lg:grid lg:grid-cols-2 lg:grid-rows-2" >
-		<div id="Sasquatches-container">
+		<div id="sasquatches-container">
 			<div class="section-heading">Sasquatches</div>
 			<div class="my-2 text-center">
-				<span x-text="population.total"></span> sasquatches</div>
+				<span x-text="population.total"></span> / <span x-text="population.max"></span> sasquatches 
+				{% set tooltipText = "Number of sasquatches currently living in your tribe / the maximum number of sasquatches your tribe can currently house" %}
+				{% include "partials/tooltip.njk" %}
+			</div>
 			<div class="flex justify-center my-2">
 				<div class="mx-2">
-					<span x-text="numIdle()"></span> idle</div>
+					<span x-text="numIdle()"></span> idle
+					{% set tooltipText = "Number of sasquatches in your tribe that have not currently been assigned a job - everyone should be put to work to maximise your chances of survival!" %}
+					{% include "partials/tooltip.njk" %}
+				</div>
 			</div>
 			<div class="w-min m-auto">
 				<div class="helper-subheading mt-4 mb-2 text-center">Assign jobs:</div>
@@ -32,8 +38,8 @@ eleventyNavigation:
 					<div class="flex items-center my-4">
 						<div class="w-28 text-right pr-2">{{ def.name }}</div>
 						<div class="flex justify-center items-center">
-							<i class="fas fa-question-circle text-myGreen tooltip">
-								<span class="tooltiptext">{{ def.description }}</span></i>
+							{% set tooltipText = def.description %}
+							{% include "partials/tooltip.njk" %}
 						</div>
 						<div class="w-14 text-center" x-text="jobs['{{ id }}']"></div>
 						<div class="relative z-0 inline-flex shadow-sm rounded-md">
@@ -49,29 +55,37 @@ eleventyNavigation:
 			</div>
 			<div class="mt-4">
 				<div class="my-2 text-center" x-show="population.max - population.total > 0">
-					<div>Room for <span x-text="population.max - population.total"></span> more sasquatches</div>
+					<div>Room for <span x-text="population.max - population.total"></span> more sasquatches
+						{% set tooltipText = "Build housing to increase max population" %}
+						{% include "partials/tooltip.njk" %}
+					</div>
 					<div>Next sasquatch <span x-text="population.remainingDaysUntilSpawn == 0 ? 'today' : 'in ' + population.remainingDaysUntilSpawn + ' days'"></span></div>
 					<div id="spawn-progress" class="ldBar label-center hide-label" style="width: 100%; height: 50px"></div>
 				</div>
-				<div class="my-2 text-center text-gray-400" x-show="population.max - population.total == 0">No more room</div>
+				<div class="my-2 text-center text-gray-400" x-show="population.max - population.total == 0">No more room for more sasquatches
+					{% set tooltipText = "Build housing to increase max population" %}
+					{% include "partials/tooltip.njk" %}
+				</div>
 			</div>
 		</div>
 		<div id="resources-container">
 			<div class="section-heading">Resources</div>
 			<div class="lg:w-2/3 lg:m-auto">
-
 				{% for resourceTypeId, resourceType in resources %}
 					<div class="bg-{{resourceType.colour}} rounded-lg m-4 pb-8 p-4">
 						<div class="section-subheading">{{ resourceType.name }}</div>
 						<div class="grid grid-cols-3 gap-2 justify-center items-center">
-							<div class="text-right">Total:</div>
+							<div class="text-right font-bold">Total:</div>
 							<div class="text-center" x-text="totalResources('{{ resourceTypeId }}')"></div>
 							<div class="text-center" :class="{'text-green-600': totalDelta('{{ resourceTypeId }}') > 0, 'text-red-600': totalDelta('{{ resourceTypeId }}') < 0}">
 								<i class="text-xs fas" :class="{'fa-arrow-up': totalDelta('{{ resourceTypeId }}') > 0, 'fa-arrow-down': totalDelta('{{ resourceTypeId }}') < 0}"></i>
 								<span x-text="totalDelta('{{ resourceTypeId }}') != 0 ? totalDelta('{{ resourceTypeId }}') : '-'"></span>
 							</div>
 							{% for id, component in resourceType.components %}
-								<div class="text-right">{{ component.name }}:</div>
+								<div class="text-right">
+									{% set tooltipText = component.description %}
+									{% include "partials/tooltip.njk" %}
+									{{ component.name }}:</div>
 								<div class="text-center" x-text="resources['{{ id }}']"></div>
 								<div class="text-center" :class="{'text-green-600': delta('{{resourceTypeId}}', '{{id}}') > 0, 'text-red-600': delta('{{resourceTypeId}}', '{{id}}') < 0}">
 									<i class="text-xs fas" :class="{'fa-arrow-up': delta('{{resourceTypeId}}', '{{id}}') > 0, 'fa-arrow-down': delta('{{resourceTypeId}}', '{{id}}') < 0}"></i>

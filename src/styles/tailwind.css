@@ -109,11 +109,11 @@ nav.btn.active {
 /* Tooltip text */
 
 .tooltip .tooltiptext {
-	@apply w-32 bg-myGreen font-sans font-bold text-white text-center rounded-lg p-2 text-xs absolute z-10 opacity-0 transition-opacity duration-300 transform translate-y-5;
+	@apply w-40 bg-myGreen font-sans font-bold text-white text-center rounded-lg p-2 text-xs absolute z-10 opacity-0 transition-all duration-300 transform translate-y-5 invisible;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
 
 .tooltip:hover .tooltiptext {
-	@apply opacity-100;
+	@apply opacity-100 visible;
 }

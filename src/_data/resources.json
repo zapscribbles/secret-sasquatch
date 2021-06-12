@@ -6,12 +6,14 @@
 			"wood": {
 				"name": "Wood",
 				"job": "chopper",
-        "consumption": 0
+				"description": "Basic resource used in construction",
+				"consumption": 0
 			},
 			"metal": {
 				"name": "Metal",
 				"job": "shinebandit",
-        "consumption": 0
+				"description": "Advanced resource used in construction",
+				"consumption": 0
 			}
 		}
 	},
@@ -22,12 +24,14 @@
 			"critters": {
 				"name": "Critters",
 				"job": "catcher",
-        "consumption": 2
+				"description": "Basic food staple",
+				"consumption": 2
 			},
 			"snacks": {
 				"name": "Snacks",
 				"job": "snacker",
-        "consumption": 1
+				"description": "Basic food staple, stolen from the humans",
+				"consumption": 1
 			}
 		}
 	}
