@@ -1,0 +1,27 @@
+{
+    "hut": {
+        "name": "Hut",
+        "description": "A place where we all can live",
+        "cost": {
+            "wood": 20
+        },
+        "costIncrease": 1.5,
+        "limit": 10,
+        "effects": {
+            "increasePopulation": 5
+        }
+    },
+    "cobbler": {
+        "name": "Cobbler",
+        "description": "Sasquatches can make special shoes for themselves here, decreasing the sound they make when they work and reducing the threat of being revealed to the humans",
+        "cost": {
+            "wood": 50,
+            "metal": 10
+        },
+        "costIncrease": 4,
+        "limit": 3,
+        "effects": {
+            "decreaseThreat": 20
+        }
+    }
+}

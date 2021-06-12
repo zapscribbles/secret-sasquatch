@@ -10,6 +10,9 @@ const gameData = {
 			retrieveJSON("data/resources.json").then((data) => {
 				this.defs.resources = data;
 			});
+			retrieveJSON("data/buildings.json").then((data) => {
+				this.defs.buildings = data;
+			});
 		} else {
 			// Load the data
 			this.loadGameClicked();
@@ -55,6 +58,7 @@ const gameData = {
 		critters: 80,
 		snacks: 40,
 	},
+	buildings: {},
 	delta(type, component) {
 		if (this.defs.resources != undefined) {
 			var resourceJob =
@@ -190,6 +194,7 @@ const gameData = {
 		this.setThreatLevel();
 	},
 	threatLevel: 0,
+	threatReduction: 0,
 	setThreatLevel() {
 		// Calulcate the threat level
 		var newThreatLevel = 0;
@@ -199,6 +204,7 @@ const gameData = {
 				newThreatLevel += job.threatIncrease * this.jobs[jobID];
 			}
 		}
+		newThreatLevel -= this.threatReduction;
 		this.threatLevel = newThreatLevel;
 		// Update the progress bar
 		this.threatProgressElement.set(newThreatLevel);
@@ -224,6 +230,45 @@ const gameData = {
 	newGameClicked() {
 		wipeGame();
 	},
+	build(buildingID) {
+		// Check if can afford
+		var canAfford = true;
+		var cantAffordResources = [];
+		for (materialID in this.defs.resources.materials.components) {
+			if (this.defs.buildings[buildingID].cost[materialID] >= this.resources[materialID]) {
+				canAfford = false;
+				cantAffordResources.push(this.defs.resources.materials.components[materialID].name);
+			}
+		}
+
+		if (canAfford === true) {
+			// Remove resources
+			for (resource in this.defs.buildings[buildingID].cost) {
+				this.resources[resource] -= this.defs.buildings[buildingID].cost[resource];
+			}
+			// Add building
+			this.buildings[buildingID] ? this.buildings[buildingID]++ : this.buildings[buildingID] = 1;
+			// Apply building effects
+			for (effect in this.defs.buildings[buildingID].effects) {
+				var effectValue = this.defs.buildings[buildingID].effects[effect];
+				console.log(effect, effectValue);
+				switch (effect) {
+					case "increasePopulation":
+						this.population.max += effectValue;
+						break;
+					case "decreaseThreat":
+						this.threatReduction += effectValue;
+						this.setThreatLevel();
+						break;
+					default:
+						console.log("Effect "+effect+" for building ID "+buildingID+" not defined")
+						break;
+				}
+			}
+		} else {
+			console.log(`Can't afford building, not enough ${cantAffordResources.join(' or ')}`);
+		}
+	}
 };
 
 function getTotal(obj) {

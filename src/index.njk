@@ -103,6 +103,19 @@ eleventyNavigation:
 		</div>
 		<div id="buildings-container">
 			<div class="section-heading">Buildings</div>
+			<div class="grid grid-cols-3 gap-3 items-center w-1/2 m-auto">
+				{% for id, building in buildings %}
+					{# <div class="flex justify-between"> #}
+						<div class="text-right">
+							{% set tooltipText = building.description %}
+							{% include "partials/tooltip.njk" %}
+							{{ building.name }}:</div>
+						<div class="text-center">
+							<span x-text="buildings['{{ id }}'] ? buildings['{{ id }}'] : 0"></span> built</div>
+						<a href="#" class="btn" @click="build('{{ id }}')">Build 1</a>
+					{# </div> #}
+				{% endfor %}
+			</div>
 		</div>
 	</div>
 </div>
