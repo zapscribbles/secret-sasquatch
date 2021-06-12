@@ -41,11 +41,6 @@ module.exports = function (eleventyConfig) {
         return content;
     });
 
-    // Bring across zero-dependency NPM modules (use entry.js so the browserfy can bring modules that have dependencies)
-    eleventyConfig.addPassthroughCopy({
-        './node_modules/alpinejs/dist/alpine.js': './common-js/alpine.js',
-    });
-
     return {
         dir: {
             input: "src",
