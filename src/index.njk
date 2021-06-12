@@ -55,16 +55,18 @@ eleventyNavigation:
 			</div>
 			<div class="mt-4">
 				<div class="my-2 text-center" x-show="population.max - population.total > 0">
-					<div>Room for <span x-text="population.max - population.total"></span> more sasquatches
+					<div>
 						{% set tooltipText = "Build housing to increase max population" %}
 						{% include "partials/tooltip.njk" %}
+						Room for <span x-text="population.max - population.total"></span> more sasquatches
 					</div>
 					<div>Next sasquatch <span x-text="population.remainingDaysUntilSpawn == 0 ? 'today' : 'in ' + population.remainingDaysUntilSpawn + ' days'"></span></div>
 					<div id="spawn-progress" class="ldBar label-center hide-label" style="width: 100%; height: 50px"></div>
 				</div>
-				<div class="my-2 text-center text-gray-400" x-show="population.max - population.total == 0">No more room for more sasquatches
+				<div class="my-2 text-center text-gray-400" x-show="population.max - population.total == 0">
 					{% set tooltipText = "Build housing to increase max population" %}
 					{% include "partials/tooltip.njk" %}
+					No more room for more sasquatches
 				</div>
 			</div>
 		</div>
@@ -103,16 +105,16 @@ eleventyNavigation:
 		</div>
 		<div id="buildings-container">
 			<div class="section-heading">Buildings</div>
-			<div class="grid grid-cols-3 gap-3 items-center w-1/2 m-auto">
+			<div class="grid grid-cols-3 gap-3 items-center lg:w-1/2 lg:m-auto">
 				{% for id, building in buildings %}
 					{# <div class="flex justify-between"> #}
-						<div class="text-right">
-							{% set tooltipText = building.description %}
-							{% include "partials/tooltip.njk" %}
-							{{ building.name }}:</div>
-						<div class="text-center">
-							<span x-text="buildings['{{ id }}'] ? buildings['{{ id }}'] : 0"></span> built</div>
-						<a href="#" class="btn" @click="build('{{ id }}')">Build 1</a>
+					<div class="text-right">
+						{% set tooltipText = building.description %}
+						{% include "partials/tooltip.njk" %}
+						{{ building.name }}:</div>
+					<div class="text-center">
+						<span x-text="buildings['{{ id }}'] ? buildings['{{ id }}'] : 0"></span> built</div>
+					<a href="#" class="btn" @click="build('{{ id }}')">Build 1</a>
 					{# </div> #}
 				{% endfor %}
 			</div>
