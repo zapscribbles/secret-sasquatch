@@ -39,10 +39,13 @@ const gameData = {
 			"stroke-width": 2,
 		});
 
+		// Set initial remainingDaysUntilSpawn
+		this.population.remainingDaysUntilSpawn = this.population.daysNeededToSpawn;
+
 		// Start timer (do this last)
 		this.increaseTime();
 	},
-	secondsInADay: 2,
+	secondsInADay: 1,
 	progressFactor: 60, // How many times a second we want the progress bar to be updated (and timer function to be run)
 	defs: {},
 	jobs: {
@@ -107,8 +110,8 @@ const gameData = {
 	population: {
 		total: 2,
 		max: 15,
-		daysNeededToSpawn: 5,
-		remainingDaysUntilSpawn: 5,
+		daysNeededToSpawn: 2,
+		remainingDaysUntilSpawn: 0,
 	},
 	spawnSasquatch() {
 		this.population.total++;
@@ -196,19 +199,34 @@ const gameData = {
 	threatLevel: 0,
 	threatReduction: 0,
 	setThreatLevel() {
-		// Calulcate the threat level
+		// Prepare empty variables for storing threat level and contributions so we don't mess with the existing values while calculating
 		var newThreatLevel = 0;
-		for (const jobID in this.defs.jobs) {
-			if (Object.hasOwnProperty.call(this.defs.jobs, jobID)) {
-				const job = this.defs.jobs[jobID];
+		var newThreatLevelContributions = [];
+		// Calculate job increases
+		for (jobID in this.defs.jobs) {
+			const job = this.defs.jobs[jobID];
+			if (this.jobs[jobID] > 0 && job.threatIncrease != 0) {
 				newThreatLevel += job.threatIncrease * this.jobs[jobID];
+				newThreatLevelContributions.push({
+					description: `${job.name}s are increasing threat by ${this.jobs[jobID] * job.threatIncrease}%`,
+					each: `(${job.threatIncrease}% each)`,
+				});
 			}
 		}
-		newThreatLevel -= this.threatReduction;
+		// Calculate reductions
+		if (this.threatReduction != 0) {
+			newThreatLevel -= this.threatReduction;
+			newThreatLevelContributions.push({
+				description: `Buildings are decreasing threat by ${this.threatReduction}%`,
+			});
+		}
+		// Apply new values
 		this.threatLevel = newThreatLevel;
+		this.threatLevelContributions = newThreatLevelContributions;
 		// Update the progress bar
 		this.threatProgressElement.set(newThreatLevel);
 	},
+	threatLevelContributions: [],
 	dayProgressElement: null,
 	threatProgressElement: null,
 	spawnProgressElement: null,
@@ -235,22 +253,31 @@ const gameData = {
 		var canAfford = true;
 		var cantAffordResources = [];
 		for (materialID in this.defs.resources.materials.components) {
-			if (this.defs.buildings[buildingID].cost[materialID] >= this.resources[materialID]) {
+			if (
+				this.defs.buildings[buildingID].cost[materialID] >=
+				this.resources[materialID]
+			) {
 				canAfford = false;
-				cantAffordResources.push(this.defs.resources.materials.components[materialID].name);
+				cantAffordResources.push(
+					this.defs.resources.materials.components[materialID].name
+				);
 			}
 		}
 
 		if (canAfford === true) {
 			// Remove resources
 			for (resource in this.defs.buildings[buildingID].cost) {
-				this.resources[resource] -= this.defs.buildings[buildingID].cost[resource];
+				this.resources[resource] -=
+					this.defs.buildings[buildingID].cost[resource];
 			}
 			// Add building
-			this.buildings[buildingID] ? this.buildings[buildingID]++ : this.buildings[buildingID] = 1;
+			this.buildings[buildingID]
+				? this.buildings[buildingID]++
+				: (this.buildings[buildingID] = 1);
 			// Apply building effects
 			for (effect in this.defs.buildings[buildingID].effects) {
-				var effectValue = this.defs.buildings[buildingID].effects[effect];
+				var effectValue =
+					this.defs.buildings[buildingID].effects[effect];
 				console.log(effect, effectValue);
 				switch (effect) {
 					case "increasePopulation":
@@ -261,14 +288,24 @@ const gameData = {
 						this.setThreatLevel();
 						break;
 					default:
-						console.log("Effect "+effect+" for building ID "+buildingID+" not defined")
+						console.log(
+							"Effect " +
+								effect +
+								" for building ID " +
+								buildingID +
+								" not defined"
+						);
 						break;
 				}
 			}
 		} else {
-			console.log(`Can't afford building, not enough ${cantAffordResources.join(' or ')}`);
+			console.log(
+				`Can't afford building, not enough ${cantAffordResources.join(
+					" or "
+				)}`
+			);
 		}
-	}
+	},
 };
 
 function getTotal(obj) {

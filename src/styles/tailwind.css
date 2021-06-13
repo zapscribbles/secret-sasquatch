@@ -63,7 +63,7 @@ nav.btn.active {
 }
 
 .btn {
-	@apply px-4 py-2 rounded-md text-sm font-medium bg-myBlue text-white hover:bg-blue-900 inline-flex text-center justify-center items-center;
+	@apply px-4 py-2 rounded-md text-sm font-medium bg-myBlue text-white hover:bg-blue-900 inline-flex text-center justify-center items-center cursor-pointer;
 }
 
 .lds-ripple {
