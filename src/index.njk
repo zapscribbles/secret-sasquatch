@@ -104,26 +104,33 @@ eleventyNavigation:
 			<div id="threat-progress" class="ldBar label-center" style="width: 100%; height: 100px"></div>
 			<div>
 				<template x-for="contribution in threatLevelContributions">
-					<div class="text-center"><span x-text="contribution.description" class="font-bold"></span> <span x-text="contribution.each"></span></div>
+					<div class="text-center">
+						<span x-text="contribution.description" class="font-bold"></span>
+						<span x-text="contribution.each"></span></div>
 				</template>
 			</div>
 		</div>
 		<div id="buildings-container">
 			<div class="section-heading">Buildings</div>
-			<div class="grid grid-cols-4 gap-3 items-center lg:mx-14 lg:m-auto">
+			<div class="flex-col lg:mx-14 lg:m-auto">
 				{% for id, building in buildings %}
-					<div class="text-right">
-						{% set tooltipText = building.description %}
-						{% include "partials/tooltip.njk" %}
-						{{ building.name }}:</div>
-					<div>
-						{% for resourceID, cost in building.cost %}
-							<div class="text-center">{{cost}} {{ resourceID }}</div>
-						{% endfor %}
+					<div class="grid grid-cols-4 gap-3 items-center my-3" x-data="{ canAfford: { wood: true, metal: true } }">
+						<div class="text-right">
+							{% set tooltipText = building.description %}
+							{% include "partials/tooltip.njk" %}
+							{{ building.name }}:</div>
+						<div>
+							{% for resourceID, cost in building.cost %}
+								<div class="text-center" x-effect="canAfford.{{resourceID}} = resources.{{resourceID}} >= {{cost}}" :class="{'text-red-500': !canAfford.{{resourceID}} }">
+									{{ cost }}
+									{{ resourceID }}
+								</div>
+							{% endfor %}
+						</div>
+						<div class="text-center">
+							<span x-text="buildings['{{ id }}'] ? buildings['{{ id }}'] : 0"></span> built</div>
+						<div class="btn" @click="build('{{ id }}')" :class="{'disabled': !Object.values(canAfford).every((val) => val)}">Build 1</div>
 					</div>
-					<div class="text-center">
-						<span x-text="buildings['{{ id }}'] ? buildings['{{ id }}'] : 0"></span> built</div>
-					<div class="btn" @click="build('{{ id }}')">Build 1</div>
 				{% endfor %}
 			</div>
 		</div>

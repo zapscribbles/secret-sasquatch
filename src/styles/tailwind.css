@@ -66,6 +66,10 @@ nav.btn.active {
 	@apply px-4 py-2 rounded-md text-sm font-medium bg-myBlue text-white hover:bg-blue-900 inline-flex text-center justify-center items-center cursor-pointer;
 }
 
+.btn.disabled {
+	@apply bg-gray-300 pointer-events-none;
+}
+
 .lds-ripple {
 	position: absolute;
 	width: 80px;
