@@ -1,25 +1,22 @@
 module.exports = {
     purge: {
-      content: ['_site/**/*.html'],
-      options: {
-        safelist: [],
-      },
+        content: ['_site/**/*.html'],
+        options: {
+            safelist: [],
+        },
     },
     theme: {
-      extend: {
-        colors: {
-          myBrown: '#5f2321',
-          myBlue: '#284B63',
-          myGreen: '#3C6E71'
+        extend: {
+            colors: {
+                myBrown: '#5f2321',
+                myBlue: '#284B63',
+                myGreen: '#3C6E71',
+            },
+            fontFamily: {
+                handwritten: ['Rancho', 'cursive'],
+            },
         },
-        fontFamily: {
-          'handwritten': ['Zeyada', 'cursive'],
-          'typewriter': ['Newsreader', 'serif'],
-        },
-      },
     },
     variants: {},
-    plugins: [
-      require('@tailwindcss/forms'),
-    ],
-  }
+    plugins: [require('@tailwindcss/forms')],
+};
