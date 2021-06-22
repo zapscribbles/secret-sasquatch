@@ -15,7 +15,14 @@ const gameData = {
             });
         } else {
             // Load the data
-            this.loadGameClicked();
+            console.log('Loading...');
+            var loadedComponentData = loadGame();
+            // Work through each object in the loaded data and replace the current component data with the loaded data
+            // TODO: Take into account versions, user may have saved on an older version of the game
+            for (key in loadedComponentData) {
+                this[key] = loadedComponentData[key];
+            }
+            console.log('Game loaded.');
         }
 
         // Setup the time of day progress bar
@@ -233,24 +240,6 @@ const gameData = {
     dayProgressElement: null,
     threatProgressElement: null,
     spawnProgressElement: null,
-    saveGameClicked() {
-        console.log('Saving...');
-        saveGame();
-        console.log('Game saved.');
-    },
-    loadGameClicked() {
-        console.log('Loading...');
-        var loadedComponentData = loadGame();
-        // Work through each object in the loaded data and replace the current component data with the loaded data
-        // TODO: Take into account versions, user may have saved on an older version of the game
-        for (key in loadedComponentData) {
-            this[key] = loadedComponentData[key];
-        }
-        console.log('Game loaded.');
-    },
-    newGameClicked() {
-        wipeGame();
-    },
     build(buildingID) {
         // Check if can afford
         var canAfford = true;
@@ -310,6 +299,51 @@ const gameData = {
         }
     },
 };
+
+document.addEventListener('alpine:init', () => {
+    Alpine.store('navFunctions', {
+        saveGameClicked() {
+            console.log('Saving...');
+            saveGame();
+            console.log('Game saved.');
+        },
+        newGameClicked() {
+            wipeGame();
+        },
+    });
+});
+
+document.addEventListener('alpine:init', () => {
+    Alpine.store('modals', {
+        toggleModal(modalID) {
+            this[modalID].open = !this[modalID].open;
+        },
+        help: {
+            open: false,
+            title: 'Help',
+            content:
+                'You are responsible for a tribe of sasquatches. It is your job to assign the sasquatches their roles and expand the tribe, while ensuring their survival. But watch out! Your wards rely on a nearby human settlemen for some vital food and resources, but they must not be alerted to your presence - if your tribe is revealed, all is lost!',
+        },
+        faq: {
+            open: false,
+            title: 'FAQ',
+            content:
+                "<p class='faq-question'>What is a sasquatch?</p>" +
+                "<p>You may know them by another name - bigfoot! You can read more about our large-footed cousins here: <a href='https://en.wikipedia.org/wiki/Bigfoot'>https://en.wikipedia.org/wiki/Bigfoot</a></p>" +
+                "<p class='faq-question'>How do I play this game?</p>" +
+                "<p>This is an idle incremental game - that is, the game plays itself! You make changes to various things (like the jobs each sasquatch has) and the game runs itself accordingly. It even runs while you are away! But be careful not to leave it too long, or your sasquatches may grow in population to the point where they exhaust their food supplies. Keep a watchful eye on things and you'll do fine!</p>" +
+                "<p class='faq-question'>There are no pictures in this game.</p>" +
+                '<p>To keep things simple I opted for a minimal, text-based interface. Down the track I would love to build a visual component that changes as you play.</p>' +
+                "<p class='faq-question'>How and why did you make this?</p>" +
+                '<p>I love idle incremental games, and I have been learning to build sites using Eleventy, Alpine and Tailwind. I thought this would be a fun way to take these two passions and meld them together. This is still very much in beta so the game will definitely change over time!</p>' +
+                "<p class='faq-question'>Can I check out the code?</p>" +
+                "<p>Sure thing! You can find the code repo on Github here: <a href='https://github.com/zapscribbles/secret-sasquatch'>https://github.com/zapscribbles/secret-sasquatch</a></p>" +
+                "<p class='faq-question'>I have questions.</p>" +
+                '<p>And I have answers! Feel free to email me at stephen.zappia@gmail.com and I will gladly answer them.</p>' +
+                '',
+        },
+    });
+});
 
 function getTotal(obj) {
     return Object.values(obj).reduce((a, b) => a + b);

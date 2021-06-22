@@ -121,3 +121,7 @@ nav.btn.active {
 .tooltip:hover .tooltiptext {
 	@apply opacity-100 visible;
 }
+
+.faq-question {
+    @apply font-bold mt-4;
+}

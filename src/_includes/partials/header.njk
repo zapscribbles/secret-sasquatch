@@ -6,11 +6,8 @@
                     <img class="h-8 w-8" src="/assets/logo.png">
                 </div>
                 <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        {% set navPages = collections.all | eleventyNavigation %}
-                        {%- for entry in navPages %}
-                            <a href="{{ entry.url | url }}" class="btn {% if entry.url == page.url %} active {% endif %}">{{ entry.title }}</a>
-                        {%- endfor %}
+                     <div class="ml-10 flex items-baseline space-x-4">
+                        {% include "partials/header-menu.njk" %}
                     </div>
                 </div>
             </div>
@@ -33,10 +30,7 @@
     <!-- Mobile menu, show/hide based on menu state. -->
     <div class="md:hidden" id="mobile-menu" x-show="isOpen">
         <div class="flex flex-col items-center px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {% set navPages = collections.all | eleventyNavigation %}
-            {%- for entry in navPages %}
-                <a href="{{ entry.url | url }}" class="btn {% if entry.url == page.url %} active {% endif %}">{{ entry.title }}</a>
-            {%- endfor %}
+            {% include "partials/header-menu.njk" %}
         </div>
     </div>
 </nav>
