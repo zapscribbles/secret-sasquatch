@@ -16,13 +16,16 @@ const gameData = {
         } else {
             // Load the data
             console.log('Loading...');
-            var loadedComponentData = loadGame();
+            var loadData = loadGame();
+            var loadedComponentData = loadData.componentData;
             // Work through each object in the loaded data and replace the current component data with the loaded data
             // TODO: Take into account versions, user may have saved on an older version of the game
             for (key in loadedComponentData) {
                 this[key] = loadedComponentData[key];
             }
-            console.log('Game loaded.');
+            // Update last saved element (save functions will do this whenever it saves, this is just to set it initially)
+            document.querySelector('#lastSavedText').innerText = prettyDate(loadData.lastSaved);
+            console.log('Game loaded from save at', prettyDate(loadData.lastSaved));
         }
 
         // Setup the time of day progress bar
@@ -47,13 +50,15 @@ const gameData = {
         });
 
         // Set initial remainingDaysUntilSpawn
-        this.population.remainingDaysUntilSpawn =
-            this.population.daysNeededToSpawn;
+        this.population.remainingDaysUntilSpawn = this.population.daysNeededToSpawn;
+
+        // Set threat level
+        this.setThreatLevel();
 
         // Start timer (do this last)
         this.increaseTime();
     },
-    secondsInADay: 1,
+    secondsInADay: 5,
     progressFactor: 60, // How many times a second we want the progress bar to be updated (and timer function to be run)
     defs: {},
     jobs: {
@@ -72,14 +77,9 @@ const gameData = {
     buildings: {},
     delta(type, component) {
         if (this.defs.resources != undefined) {
-            var resourceJob =
-                this.defs.resources[type].components[component].job;
-            var amountGained =
-                this.jobs[resourceJob] *
-                this.defs.jobs[resourceJob].amountGathered;
-            var amountConsumed =
-                this.population.total *
-                this.defs.resources[type].components[component].consumption;
+            var resourceJob = this.defs.resources[type].components[component].job;
+            var amountGained = this.jobs[resourceJob] * this.defs.jobs[resourceJob].amountGathered;
+            var amountConsumed = this.population.total * this.defs.resources[type].components[component].consumption;
             return amountGained - amountConsumed;
         } else {
             return 0;
@@ -89,12 +89,7 @@ const gameData = {
         if (this.defs.resources != undefined) {
             var totalDelta = 0;
             for (const componentID in this.defs.resources[type].components) {
-                if (
-                    Object.hasOwnProperty.call(
-                        this.defs.resources[type].components,
-                        componentID,
-                    )
-                ) {
+                if (Object.hasOwnProperty.call(this.defs.resources[type].components, componentID)) {
                     const resourceDelta = this.delta(type, componentID);
                     totalDelta += resourceDelta;
                 }
@@ -138,9 +133,7 @@ const gameData = {
                 // Add to the job
                 this.jobs[job] += amount;
             } else {
-                console.log(
-                    `Not enough idle workers (only ${this.numIdle()}) to add ${amount} to job ${job}`,
-                );
+                console.log(`Not enough idle workers (only ${this.numIdle()}) to add ${amount} to job ${job}`);
                 return 'Not enough idle workers to add to that job';
             }
         } else if (changeType == 'subtract') {
@@ -161,9 +154,7 @@ const gameData = {
         setTimeout(() => {
             // console.log(humanReadableProxy(this.currentTime))
             this.currentTime += 1 / this.progressFactor;
-            this.dayProgressElement.set(
-                (this.currentTime / this.secondsInADay) * 100,
-            );
+            this.dayProgressElement.set((this.currentTime / this.secondsInADay) * 100);
             if (this.currentTime >= this.secondsInADay) {
                 this.endOfDay();
             }
@@ -186,23 +177,22 @@ const gameData = {
         if (this.population.total < this.population.max) {
             if (this.population.remainingDaysUntilSpawn == 0) {
                 // Reset remainingDaysUntilSpawn counter
-                this.population.remainingDaysUntilSpawn =
-                    this.population.daysNeededToSpawn;
+                this.population.remainingDaysUntilSpawn = this.population.daysNeededToSpawn;
                 // Attempt to spawn a new sasquatch
                 this.spawnSasquatch();
             } else {
                 this.population.remainingDaysUntilSpawn--;
             }
             this.spawnProgressElement.set(
-                100 -
-                    (this.population.remainingDaysUntilSpawn /
-                        this.population.daysNeededToSpawn) *
-                        100,
+                100 - (this.population.remainingDaysUntilSpawn / this.population.daysNeededToSpawn) * 100,
             );
         }
 
         // Update threat level
         this.setThreatLevel();
+
+        // Save the game
+        saveGame();
     },
     threatLevel: 0,
     threatReduction: 0,
@@ -216,9 +206,7 @@ const gameData = {
             if (this.jobs[jobID] > 0 && job.threatIncrease != 0) {
                 newThreatLevel += job.threatIncrease * this.jobs[jobID];
                 newThreatLevelContributions.push({
-                    description: `${job.name}s are increasing threat by ${
-                        this.jobs[jobID] * job.threatIncrease
-                    }%`,
+                    description: `${job.name}s are increasing threat by ${this.jobs[jobID] * job.threatIncrease}%`,
                     each: `(${job.threatIncrease}% each)`,
                 });
             }
@@ -245,31 +233,22 @@ const gameData = {
         var canAfford = true;
         var cantAffordResources = [];
         for (materialID in this.defs.resources.materials.components) {
-            if (
-                this.defs.buildings[buildingID].cost[materialID] >=
-                this.resources[materialID]
-            ) {
+            if (this.defs.buildings[buildingID].cost[materialID] >= this.resources[materialID]) {
                 canAfford = false;
-                cantAffordResources.push(
-                    this.defs.resources.materials.components[materialID].name,
-                );
+                cantAffordResources.push(this.defs.resources.materials.components[materialID].name);
             }
         }
 
         if (canAfford === true) {
             // Remove resources
             for (resource in this.defs.buildings[buildingID].cost) {
-                this.resources[resource] -=
-                    this.defs.buildings[buildingID].cost[resource];
+                this.resources[resource] -= this.defs.buildings[buildingID].cost[resource];
             }
             // Add building
-            this.buildings[buildingID]
-                ? this.buildings[buildingID]++
-                : (this.buildings[buildingID] = 1);
+            this.buildings[buildingID] ? this.buildings[buildingID]++ : (this.buildings[buildingID] = 1);
             // Apply building effects
             for (effect in this.defs.buildings[buildingID].effects) {
-                var effectValue =
-                    this.defs.buildings[buildingID].effects[effect];
+                var effectValue = this.defs.buildings[buildingID].effects[effect];
                 console.log(effect, effectValue);
                 switch (effect) {
                     case 'increasePopulation':
@@ -280,32 +259,96 @@ const gameData = {
                         this.setThreatLevel();
                         break;
                     default:
-                        console.log(
-                            'Effect ' +
-                                effect +
-                                ' for building ID ' +
-                                buildingID +
-                                ' not defined',
-                        );
+                        console.log('Effect ' + effect + ' for building ID ' + buildingID + ' not defined');
                         break;
                 }
             }
         } else {
-            console.log(
-                `Can't afford building, not enough ${cantAffordResources.join(
-                    ' or ',
-                )}`,
-            );
+            var errorResources = cantAffordResources.join(' or '); // Put this in separate variable as Prettier splits the expression across multiple lines when inside a template literal
+            console.log(`Can't afford building, not enough ${errorResources}`);
         }
     },
 };
 
+function getTotal(obj) {
+    return Object.values(obj).reduce((a, b) => a + b);
+}
+
+async function retrieveJSON(fileDir) {
+    return await fetch(fileDir).then(response => {
+        return response.json();
+    });
+}
+
+function saveGame() {
+    console.log('Saving...');
+    // Get relevant save data
+    var componentData = {};
+    for (key in gameData) {
+        if (
+            typeof gameData[key] != 'function' &&
+            !(gameData[key] instanceof ldBar) &&
+            key !== 'currentTime' &&
+            key[0] != '$'
+        ) {
+            componentData[key] = gameData[key];
+        }
+    }
+    // Update last save timestamp
+    var lastSaved = new Date();
+    localStorage.setItem('last_saved', lastSaved);
+    // Encrypt the save data
+    var encryptedSave = window.simpleEncryptor.encrypt(componentData);
+    // console.log(encryptedSave);
+    // Store the save data
+    localStorage.setItem('save_string', encryptedSave);
+    // Dispatch an event with the last saved date so Alpine can do things
+    window.dispatchEvent(new CustomEvent('gamesaved', { detail: lastSaved }));
+    console.log('Game saved at', prettyDate(lastSaved));
+}
+
+function loadGame() {
+    // Load and decode the saved data
+    var saveString = localStorage.getItem('save_string');
+    var lastSaved = new Date(localStorage.getItem('last_saved'));
+    if (saveString == null) {
+        return null;
+    } else {
+        // console.log(saveString)
+        // Decrypt the save data
+        var decryptedSave = window.simpleEncryptor.decrypt(saveString);
+        return {
+            componentData: decryptedSave,
+            lastSaved: lastSaved,
+        };
+    }
+}
+
+function wipeGame() {
+    localStorage.setItem('save_string', null);
+    location.reload();
+}
+
+function prettyDate(dateObj) {
+    if (typeof dateObj == 'object') {
+        return (
+            dateObj.toDateString() +
+            ' ' +
+            dateObj.getHours() +
+            ':' +
+            ('0' + dateObj.getMinutes()).slice(-2) +
+            ':' +
+            ('0' + dateObj.getSeconds()).slice(-2)
+        );
+    } else {
+        return 'No saves yet, or last save not a date object';
+    }
+}
+
 document.addEventListener('alpine:init', () => {
     Alpine.store('navFunctions', {
         saveGameClicked() {
-            console.log('Saving...');
             saveGame();
-            console.log('Game saved.');
         },
         newGameClicked() {
             wipeGame();
@@ -344,47 +387,3 @@ document.addEventListener('alpine:init', () => {
         },
     });
 });
-
-function getTotal(obj) {
-    return Object.values(obj).reduce((a, b) => a + b);
-}
-
-async function retrieveJSON(fileDir) {
-    return await fetch(fileDir).then(response => {
-        return response.json();
-    });
-}
-
-function saveGame() {
-    var componentData = {};
-    for (key in gameData) {
-        if (
-            typeof gameData[key] != 'function' &&
-            !(gameData[key] instanceof ldBar) &&
-            key !== 'currentTime' &&
-            key[0] != '$'
-        ) {
-            componentData[key] = gameData[key];
-        }
-    }
-    var encryptedSave = window.simpleEncryptor.encrypt(componentData);
-    console.log(encryptedSave);
-    localStorage.setItem('save_string', encryptedSave);
-}
-
-function loadGame() {
-    // Load and decode the saved data
-    var saveString = localStorage.getItem('save_string');
-    if (saveString == null) {
-        return null;
-    } else {
-        // console.log(saveString)
-        var decryptedSave = window.simpleEncryptor.decrypt(saveString);
-        return decryptedSave;
-    }
-}
-
-function wipeGame() {
-    localStorage.setItem('save_string', null);
-    location.reload();
-}

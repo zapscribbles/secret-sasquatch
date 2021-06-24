@@ -11,7 +11,7 @@ extraNav:
   -
     key: Save
     url: '#'
-    title: Save Game
+    title: Save Manually
     clickFunc: $store.navFunctions.saveGameClicked()
   -
     key: HelpModal
@@ -25,14 +25,13 @@ extraNav:
     clickFunc: $store.modals.toggleModal('faq')
 ---
 <div x-data>
+    {% set modalID = "faq" %}
+    {% include "partials/modal.njk" %}
     {% set modalID = "help" %}
     {% include "partials/modal.njk" %}
 </div>
-<div x-data>
-    {% set modalID = "faq" %}
-    {% include "partials/modal.njk" %}
-</div>
 <div id="game-container" class="w-full" x-data="gameData">
+    <div class="text-sm text-center absolute text-gray-400 right-10">Last Saved: <span id="lastSavedText" @gamesaved.window="$el.innerText = prettyDate($event.detail)"></span></div>
 	<div id="time-container">
 		{# <div class="section-heading">Time</div> #}
 		<div id="day-progress" class="ldBar label-center hide-label" style="width: 100%; height: 100px">
